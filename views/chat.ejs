@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- mobile metas -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1">   
+    <title>Home</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <h2 style="color:#524A4E">Hello, <%=name%></h2>
+    <div id="main_box">
+
+    <!-- chat section-->
+<div id="user-chat-box">
+    <ul id="chat-messages-list">
+     
+    </ul>
+    <div id="chat-message-input-container">
+      <input id="chat-message-input" placeholder="Type message here" />
+      <button onclick="sendMessage()" id="send-message">Send</button>
+    </div>
+  
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"></script>
+    <script>
+      const socket = io("http://localhost:4000");
+     
+      socket.on("message", (data) => {
+        const htmlCardData = `<li class="other-message"><span id="other-message-receive">${data}</span></li>`
+        var box = document.querySelector("#chat-messages-list").insertAdjacentHTML("beforeend", htmlCardData);
+        
+      });
+      socket.on('disconnect',()=>{
+        socket.emit('message','User Left the chat')
+      })
+      const sendMessage = () => {
+        var send_message = document.getElementById("chat-message-input");
+         var send_message = document.getElementById("chat-message-input");
+        const htmlCardData = `<li class="self-message"><span id="my-message-receive">${send_message.value} </span> </li>`
+        var box = document.querySelector("#chat-messages-list").insertAdjacentHTML("beforeend", htmlCardData);
+        
+        socket.emit("message", send_message.value);
+        send_message.value="";
+      };
+  
+    </script>
+  </div>
+</div>
+</body>
+</html>
